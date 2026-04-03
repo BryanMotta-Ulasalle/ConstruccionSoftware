@@ -1,6 +1,8 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app) 
 
 tasks = [] 
 Users = []
@@ -16,11 +18,11 @@ def add_task():
     data = request.json
     if(not data or "content" not in data):
         return jsonify({"error": "Content is required"}), 400
-    task = {"id": len(tasks), "content": data.get("content", ""), "done": False}
+    task = {"id": len(tasks), "title": data.get("title", ""), "content": data.get("content", ""), "done": False}
     tasks.append(task)
     return jsonify({"message": "Task added!", "task": task}), 201
 
-# PUT - update a task by ID
+# PUT - update a task by ID  ← CORREGIDO: ahora actualiza title y done también
 @app.route("/tasks/<int:task_id>", methods=["PUT"])
 def update_task(task_id):
     if task_id >= len(tasks):
@@ -28,7 +30,9 @@ def update_task(task_id):
     data = request.json
     if(not data):
         return jsonify({"error": "No data provided"}), 400
+    tasks[task_id]["title"]   = data.get("title",   tasks[task_id]["title"])
     tasks[task_id]["content"] = data.get("content", tasks[task_id]["content"])
+    tasks[task_id]["done"]    = data.get("done",    tasks[task_id]["done"])
     return jsonify({"message": "Task updated!", "task": tasks[task_id]})
 
 # DELETE - delete a task by ID
@@ -54,8 +58,7 @@ def get_done_task(task_id):
     return jsonify({"message": "Task marked as done!", "task": tasks[task_id]})
 
 
-
-#USERS ENDPOINTS
+# USERS ENDPOINTS
 
 @app.route("/users", methods=["GET"])
 def get_users():
@@ -99,8 +102,7 @@ def delete_user(user_id):
     return jsonify({"message": "User deleted!", "user": removed})
 
 
-
-
 if __name__ == "__main__":
     app.run(debug=True)
 
+    
