@@ -122,6 +122,12 @@ Flask - Introduction/
 - **Pruebas**: Agregar tests unitarios e integración.
 - **Despliegue**: Configurar para producción (Gunicorn, Docker).
 
+## Información del Proyecto
+
+Este proyecto fue desarrollado como parte del curso **Construcción de Software** en la **Universidad La Salle**.
+
+**Autor**: Bryan Motta Bedregal
+
 ## Contribución
 
 Para contribuir:
