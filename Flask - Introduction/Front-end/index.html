@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Architectural Minimalist - Command Center</title>
+    <title>Task and Users</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
@@ -21,49 +21,13 @@
             },
         }
     </script>
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-        h1, h2, h3, .headline { font-family: 'Manrope', sans-serif; }
-        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-
-        /* Modal */
-        #task-modal { transition: opacity 0.2s ease; }
-        #task-modal.hidden { opacity: 0; pointer-events: none; }
-
-        /* Toast */
-        #toast {
-            transition: transform 0.3s ease, opacity 0.3s ease;
-            transform: translateY(100px);
-            opacity: 0;
-        }
-        #toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        /* Loading skeleton */
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
-        .skeleton {
-            background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-            border-radius: 6px;
-        }
-    </style>
+    <link href="index.css" rel="stylesheet" />
 </head>
 <body class="bg-background text-on-surface min-h-screen">
 
-    <!-- ═══════════════════════════════════════════ -->
-    <!--  MODAL — Create / Edit Task                 -->
-    <!-- ═══════════════════════════════════════════ -->
+    <!-- MODAL Tasks -->
     <div id="task-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center">
-        <!-- Backdrop -->
         <div id="modal-backdrop" class="absolute inset-0 bg-black/30 backdrop-blur-sm"></div>
-        <!-- Panel -->
         <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-lg mx-4 p-8 z-10">
             <h3 id="modal-title" class="text-xl font-extrabold text-indigo-950 mb-6 font-headline">Nueva Tarea</h3>
             <div class="space-y-4">
@@ -88,344 +52,199 @@
                 </div>
             </div>
             <div class="flex gap-3 mt-8">
-                <button id="btn-cancel"
-                    class="flex-1 px-6 py-3 rounded-xl border border-outline-variant text-slate-600 font-bold text-sm hover:bg-slate-50 transition">
-                    Cancelar
-                </button>
-                <button id="btn-save"
-                    class="flex-1 px-6 py-3 bg-gradient-to-r from-primary to-primary-container text-white rounded-xl font-bold text-sm shadow-lg hover:shadow-primary/20 transition active:scale-95">
-                    Guardar
-                </button>
+                <button id="btn-cancel" class="flex-1 px-6 py-3 rounded-xl border border-outline-variant text-slate-600 font-bold text-sm hover:bg-slate-50 transition">Cancelar</button>
+                <button id="btn-save" class="flex-1 px-6 py-3 bg-gradient-to-r from-primary to-primary-container text-white rounded-xl font-bold text-sm shadow-lg transition active:scale-95">Guardar</button>
             </div>
         </div>
     </div>
 
-    <!-- ═══════════════════════════════════════════ -->
-    <!--  TOAST NOTIFICATION                         -->
-    <!-- ═══════════════════════════════════════════ -->
+    <!-- MODAL Users -->
+    <div id="user-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center">
+        <div id="user-modal-backdrop" class="absolute inset-0 bg-black/30 backdrop-blur-sm"></div>
+        <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-lg mx-4 p-8 z-10">
+            <h3 id="user-modal-title" class="text-xl font-extrabold text-indigo-950 mb-6 font-headline">Nuevo Usuario</h3>
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-1.5">Nombre</label>
+                        <input id="input-name" type="text" placeholder="Vicente..."
+                            class="w-full border border-outline-variant rounded-xl px-4 py-3 text-sm font-medium text-indigo-950 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition" />
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-1.5">Apellido</label>
+                        <input id="input-lastname" type="text" placeholder="Machaca..."
+                            class="w-full border border-outline-variant rounded-xl px-4 py-3 text-sm font-medium text-indigo-950 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition" />
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-1.5">Ciudad</label>
+                        <input id="input-city" type="text" placeholder="Aqp..."
+                            class="w-full border border-outline-variant rounded-xl px-4 py-3 text-sm font-medium text-indigo-950 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition" />
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-1.5">País</label>
+                        <input id="input-country" type="text" placeholder="Perú..."
+                            class="w-full border border-outline-variant rounded-xl px-4 py-3 text-sm font-medium text-indigo-950 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition" />
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-1.5">Código</label>
+                        <input id="input-code" type="text" placeholder="04000..."
+                            class="w-full border border-outline-variant rounded-xl px-4 py-3 text-sm font-medium text-indigo-950 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition" />
+                    </div>
+                </div>
+            </div>
+            <div class="flex gap-3 mt-8">
+                <button id="btn-user-cancel" class="flex-1 px-6 py-3 rounded-xl border border-outline-variant text-slate-600 font-bold text-sm hover:bg-slate-50 transition">Cancelar</button>
+                <button id="btn-user-save" class="flex-1 px-6 py-3 bg-gradient-to-r from-primary to-primary-container text-white rounded-xl font-bold text-sm shadow-lg transition active:scale-95">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
     <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[200] flex items-center gap-3 px-5 py-3 bg-indigo-950 text-white text-sm font-semibold rounded-2xl shadow-xl">
         <span id="toast-icon" class="material-symbols-outlined text-base">check_circle</span>
         <span id="toast-msg">Acción completada</span>
     </div>
 
-    <!-- ═══════════════════════════════════════════ -->
-    <!--  SIDEBAR                                    -->
-    <!-- ═══════════════════════════════════════════ -->
+    <!-- SIDEBAR -->
     <aside class="h-screen w-64 fixed left-0 top-0 bg-slate-100 dark:bg-slate-900 flex flex-col p-4 gap-2 z-50">
         <div class="mb-8 px-2 flex items-center gap-3">
             <div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white">
                 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">architecture</span>
             </div>
             <div>
-                <h1 class="text-lg font-black tracking-tighter text-indigo-950 dark:text-slate-100 leading-tight">Command Center</h1>
-                <p class="font-manrope text-[10px] font-medium text-slate-600 dark:text-slate-400 uppercase tracking-widest">Management Suite</p>
+                <h1 class="text-lg font-black tracking-tighter text-indigo-950 dark:text-slate-100 leading-tight">Gestion</h1>
+                <p class="font-manrope text-[10px] font-medium text-slate-600 dark:text-slate-400 uppercase tracking-widest">de Tareas y Usuarios</p>
             </div>
         </div>
         <nav class="flex-1 space-y-1">
-            <a class="flex items-center gap-3 px-3 py-2.5 bg-white dark:bg-slate-800 text-indigo-900 dark:text-indigo-100 shadow-sm rounded-lg font-manrope text-sm font-bold translate-x-1 duration-150" href="#">
+            <button id="nav-tasks" onclick="navigateTo('tasks')"
+                class="w-full flex items-center gap-3 px-3 py-2.5 bg-white text-indigo-900 shadow-sm rounded-lg font-manrope text-sm font-bold translate-x-1 duration-150">
                 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">assignment_turned_in</span>
                 <span>Tasks</span>
-            </a>
-            <a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800/50 transition-all font-manrope text-sm font-medium" href="#">
+            </button>
+            <button id="nav-users" onclick="navigateTo('users')"
+                class="w-full flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-200 transition-all font-manrope text-sm font-medium rounded-lg">
                 <span class="material-symbols-outlined">group</span>
                 <span>Users</span>
-            </a>
+            </button>
         </nav>
     </aside>
 
-    <!-- ═══════════════════════════════════════════ -->
-    <!--  MAIN CONTENT                               -->
-    <!-- ═══════════════════════════════════════════ -->
+    <!-- MAIN -->
     <main class="ml-64 min-h-screen">
         <div class="p-8 max-w-7xl mx-auto">
 
-            <!-- Page Header -->
-            <div class="flex justify-between items-end mb-10">
-                <div>
-                    <h2 class="text-3xl font-extrabold tracking-tight text-indigo-950 mb-2 font-headline">Task Management</h2>
-                    <p class="text-on-surface-variant font-body">Orchestrate your workspace workflows with precision.</p>
-                </div>
-                <button id="btn-new-task"
-                    class="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary to-primary-container text-white rounded-xl shadow-lg hover:shadow-primary/20 transition-all active:scale-95 group">
-                    <span class="material-symbols-outlined text-xl transition-transform group-hover:rotate-90">add</span>
-                    <span class="font-manrope font-bold tracking-tight">New Task</span>
-                </button>
-            </div>
-
-            <!-- Stats -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
-                <div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/10 shadow-sm flex flex-col justify-between">
-                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">In Progress</span>
-                    <span id="stat-in-progress" class="text-4xl font-extrabold text-indigo-950">—</span>
-                </div>
-                <div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/10 shadow-sm flex flex-col justify-between">
-                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Completed</span>
-                    <span id="stat-completed" class="text-4xl font-extrabold text-indigo-950">—</span>
-                </div>
-                <div class="bg-primary p-6 rounded-2xl shadow-xl flex flex-col justify-between text-white overflow-hidden relative">
-                    <div class="relative z-10">
-                        <span class="text-xs font-bold opacity-70 uppercase tracking-widest mb-4 block">Total Tasks</span>
-                        <span id="stat-total" class="text-4xl font-extrabold tracking-tighter">—</span>
+            <!-- SECTION: TASKS -->
+            <section id="section-tasks">
+                <div class="flex justify-between items-end mb-10">
+                    <div>
+                        <h2 class="text-3xl font-extrabold tracking-tight text-indigo-950 mb-2 font-headline">Gestor de tareas</h2>
+                        <p class="text-on-surface-variant font-body">Espacio para poder gestionar tus tareas de forma eficiente.</p>
                     </div>
-                    <div class="absolute -right-4 -bottom-4 opacity-10">
-                        <span class="material-symbols-outlined text-8xl">auto_awesome</span>
+                    <button id="btn-new-task"
+                        class="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary to-primary-container text-white rounded-xl shadow-lg transition-all active:scale-95 group">
+                        <span class="material-symbols-outlined text-xl transition-transform group-hover:rotate-90">add</span>
+                        <span class="font-manrope font-bold tracking-tight">New Task</span>
+                    </button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+                    <div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/10 shadow-sm flex flex-col justify-between">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">In Progress</span>
+                        <span id="stat-in-progress" class="text-4xl font-extrabold text-indigo-950">—</span>
+                    </div>
+                    <div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/10 shadow-sm flex flex-col justify-between">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Completed</span>
+                        <span id="stat-completed" class="text-4xl font-extrabold text-indigo-950">—</span>
+                    </div>
+                    <div class="bg-primary p-6 rounded-2xl shadow-xl flex flex-col justify-between text-white overflow-hidden relative">
+                        <div class="relative z-10">
+                            <span class="text-xs font-bold opacity-70 uppercase tracking-widest mb-4 block">Total Tasks</span>
+                            <span id="stat-total" class="text-4xl font-extrabold tracking-tighter">—</span>
+                        </div>
+                        <div class="absolute -right-4 -bottom-4 opacity-10">
+                            <span class="material-symbols-outlined text-8xl">auto_awesome</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Table -->
-            <div class="bg-surface-container-lowest rounded-3xl p-2 shadow-[0px_12px_32px_rgba(25,28,29,0.04)] border border-outline-variant/10">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-separate border-spacing-y-1 px-4 pb-4">
-                        <thead>
-                            <tr class="text-on-surface-variant uppercase text-[10px] font-bold tracking-widest">
-                                <th class="px-4 py-4 font-semibold">Task Title</th>
-                                <th class="px-4 py-4 font-semibold">Content</th>
-                                <th class="px-4 py-4 font-semibold">Status</th>
-                                <th class="px-4 py-4 font-semibold text-right">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tasks-tbody" class="text-sm font-body">
-                            <!-- Rows are injected by JS -->
-                            <tr id="loading-row">
-                                <td colspan="4" class="px-4 py-8 text-center text-slate-400 text-sm">
+                <div class="bg-surface-container-lowest rounded-3xl p-2 shadow-[0px_12px_32px_rgba(25,28,29,0.04)] border border-outline-variant/10">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-separate border-spacing-y-1 px-4 pb-4">
+                            <thead>
+                                <tr class="text-on-surface-variant uppercase text-[10px] font-bold tracking-widest">
+                                    <th class="px-4 py-4 font-semibold">Task Title</th>
+                                    <th class="px-4 py-4 font-semibold">Content</th>
+                                    <th class="px-4 py-4 font-semibold">Status</th>
+                                    <th class="px-4 py-4 font-semibold text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tasks-tbody" class="text-sm font-body">
+                                <tr><td colspan="4" class="px-4 py-8 text-center text-slate-400 text-sm">
                                     <div class="flex flex-col items-center gap-3">
                                         <div class="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
                                         <span>Cargando tareas...</span>
                                     </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                </td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
+            </section>
+
+            <!-- SECTION: USERS -->
+            <section id="section-users" class="hidden">
+                <div class="flex justify-between items-end mb-10">
+                    <div>
+                        <h2 class="text-3xl font-extrabold tracking-tight text-indigo-950 mb-2 font-headline">Gestor de usuarios</h2>
+                        <p class="text-on-surface-variant font-body">Administra a tu equipo y su información.</p>
+                    </div>
+                    <button id="btn-new-user"
+                        class="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary to-primary-container text-white rounded-xl shadow-lg transition-all active:scale-95 group">
+                        <span class="material-symbols-outlined text-xl transition-transform group-hover:rotate-90">add</span>
+                        <span class="font-manrope font-bold tracking-tight">New User</span>
+                    </button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+                    <div class="bg-primary p-6 rounded-2xl shadow-xl flex flex-col justify-between text-white overflow-hidden relative">
+                        <div class="relative z-10">
+                            <span class="text-xs font-bold opacity-70 uppercase tracking-widest mb-4 block">Total Users</span>
+                            <span id="stat-total-users" class="text-4xl font-extrabold tracking-tighter">—</span>
+                        </div>
+                        <div class="absolute -right-4 -bottom-4 opacity-10">
+                            <span class="material-symbols-outlined text-8xl">group</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-surface-container-lowest rounded-3xl p-2 shadow-[0px_12px_32px_rgba(25,28,29,0.04)] border border-outline-variant/10">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-separate border-spacing-y-1 px-4 pb-4">
+                            <thead>
+                                <tr class="text-on-surface-variant uppercase text-[10px] font-bold tracking-widest">
+                                    <th class="px-4 py-4 font-semibold">Name</th>
+                                    <th class="px-4 py-4 font-semibold">Lastname</th>
+                                    <th class="px-4 py-4 font-semibold">City</th>
+                                    <th class="px-4 py-4 font-semibold">Country</th>
+                                    <th class="px-4 py-4 font-semibold">Code</th>
+                                    <th class="px-4 py-4 font-semibold text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-tbody" class="text-sm font-body">
+                                <tr><td colspan="6" class="px-4 py-8 text-center text-slate-400 text-sm">
+                                    <div class="flex flex-col items-center gap-3">
+                                        <div class="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                                        <span>Cargando usuarios...</span>
+                                    </div>
+                                </td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
 
         </div>
     </main>
 
-    <!-- ═══════════════════════════════════════════ -->
-    <!--  JAVASCRIPT                                 -->
-    <!-- ═══════════════════════════════════════════ -->
-    <script>
-        const API_BASE = 'http://localhost:5000';
-
-        let tasks = [];
-        let editingId = null;
-
-        const tbody        = document.getElementById('tasks-tbody');
-        const modal        = document.getElementById('task-modal');
-        const modalTitle   = document.getElementById('modal-title');
-        const inputTitle   = document.getElementById('input-title');
-        const inputContent = document.getElementById('input-content');
-        const inputStatus  = document.getElementById('input-status');
-        const btnSave      = document.getElementById('btn-save');
-        const btnCancel    = document.getElementById('btn-cancel');
-        const btnNewTask   = document.getElementById('btn-new-task');
-        const backdrop     = document.getElementById('modal-backdrop');
-
-        // ─── Toast ───────────────────────────────────────────────
-        function showToast(msg, isError = false) {
-            const toast = document.getElementById('toast');
-            const icon  = document.getElementById('toast-icon');
-            const msgEl = document.getElementById('toast-msg');
-            icon.textContent = isError ? 'error' : 'check_circle';
-            msgEl.textContent = msg;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3000);
-        }
-
-        // ─── Normalizar tarea del back ────────────────────────────
-        // El back maneja: { id, title, content, done }
-        // El front usa:   { id, title, content, status }
-        function normalize(t) {
-            let status = 'In Progress';
-            if (t.done === true) status = 'Completed';
-            return { id: t.id, title: t.title || '', content: t.content || '', done: t.done, status: status };
-        }
-
-        // ─── Stats ───────────────────────────────────────────────
-        function updateStats() {
-            document.getElementById('stat-in-progress').textContent =
-                tasks.filter(t => t.status === 'In Progress').length;
-            document.getElementById('stat-completed').textContent =
-                tasks.filter(t => t.status === 'Completed').length;
-            document.getElementById('stat-total').textContent = tasks.length;
-        }
-
-        // ─── Badge de estado ─────────────────────────────────────
-        function statusBadge(status) {
-            if (status === 'In Progress') return `
-                <div class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></div>
-                <span class="px-2.5 py-1 bg-secondary-fixed text-on-secondary-fixed-variant text-[10px] font-bold uppercase rounded-md">In Progress</span>`;
-            if (status === 'Completed') return `
-                <span class="px-2.5 py-1 bg-secondary text-white text-[10px] font-bold uppercase rounded-md">Completed</span>`;
-            return `<span class="px-2.5 py-1 bg-slate-200 text-slate-600 text-[10px] font-bold uppercase rounded-md">Backlog</span>`;
-        }
-
-        // ─── Render tabla ─────────────────────────────────────────
-        function renderTable() {
-            if (tasks.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="px-4 py-12 text-center text-slate-400 text-sm">
-                    <span class="material-symbols-outlined text-3xl mb-2 block opacity-30">inbox</span>
-                    No hay tareas aún. ¡Crea la primera!
-                </td></tr>`;
-                return;
-            }
-            tbody.innerHTML = tasks.map(task => `
-                <tr class="group hover:bg-surface-container-low transition-all rounded-xl cursor-pointer">
-                    <td class="px-4 py-5 rounded-l-xl">
-                        <span class="font-bold text-indigo-950">${escHtml(task.title)}</span>
-                    </td>
-                    <td class="px-4 py-5">
-                        <p class="text-on-surface-variant line-clamp-1">${escHtml(task.content)}</p>
-                    </td>
-                    <td class="px-4 py-5">
-                        <div class="flex items-center gap-2">${statusBadge(task.status)}</div>
-                    </td>
-                    <td class="px-4 py-5 text-right rounded-r-xl">
-                        <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button onclick="openEdit(${task.id})" class="p-1.5 text-slate-400 hover:text-primary transition-colors hover:bg-white rounded-lg shadow-sm">
-                                <span class="material-symbols-outlined text-lg">edit</span>
-                            </button>
-                            <button onclick="deleteTask(${task.id})" class="p-1.5 text-slate-400 hover:text-error transition-colors hover:bg-white rounded-lg shadow-sm">
-                                <span class="material-symbols-outlined text-lg">delete</span>
-                            </button>
-                        </div>
-                    </td>
-                </tr>`).join('');
-        }
-
-        function escHtml(str) {
-            return String(str || '')
-                .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-        }
-
-        // ─── API calls ────────────────────────────────────────────
-        async function fetchTasks() {
-            try {
-                const res  = await fetch(`${API_BASE}/tasks`);
-                const json = await res.json();
-                console.log('Raw response:', json);
-                tasks = json.tasks.map(normalize);
-                console.log('Normalized tasks:', tasks);
-                updateStats();
-                renderTable();
-            } catch (err) {
-                console.error('fetchTasks error:', err);
-                tbody.innerHTML = `<tr><td colspan="4" class="px-4 py-8 text-center text-error text-sm">
-                    Error al cargar las tareas: ${err.message}
-                </td></tr>`;
-                showToast('Error al cargar las tareas', true);
-            }
-        }
-
-        async function createTask(payload) {
-            const res  = await fetch(`${API_BASE}/tasks`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload),
-            });
-            if (!res.ok) throw new Error('Error al crear tarea');
-            const json = await res.json();
-            return normalize(json.task);
-        }
-
-        async function updateTask(id, payload) {
-            const res  = await fetch(`${API_BASE}/tasks/${id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload),
-            });
-            if (!res.ok) throw new Error('Error al actualizar tarea');
-            const json = await res.json();
-            return normalize(json.task);
-        }
-
-        async function deleteTask(id) {
-            if (!confirm('¿Seguro que deseas eliminar esta tarea?')) return;
-            try {
-                const res = await fetch(`${API_BASE}/tasks/${id}`, { method: 'DELETE' });
-                if (!res.ok) throw new Error();
-                tasks = tasks.filter(t => t.id !== id);
-                updateStats();
-                renderTable();
-                showToast('Tarea eliminada');
-            } catch {
-                showToast('Error al eliminar la tarea', true);
-            }
-        }
-
-        // ─── Modal ────────────────────────────────────────────────
-        function openCreate() {
-            editingId = null;
-            modalTitle.textContent = 'Nueva Tarea';
-            inputTitle.value   = '';
-            inputContent.value = '';
-            inputStatus.value  = 'In Progress';
-            modal.classList.remove('hidden');
-        }
-
-        function openEdit(id) {
-            const task = tasks.find(t => t.id === id);
-            if (!task) return;
-            editingId = id;
-            modalTitle.textContent = 'Editar Tarea';
-            inputTitle.value   = task.title;
-            inputContent.value = task.content;
-            inputStatus.value  = task.status;
-            modal.classList.remove('hidden');
-        }
-
-        function closeModal() {
-            modal.classList.add('hidden');
-            editingId = null;
-        }
-
-        // ─── Guardar tarea ────────────────────────────────────────
-        btnSave.addEventListener('click', async () => {
-            const title   = inputTitle.value.trim();
-            const content = inputContent.value.trim();
-            const status  = inputStatus.value;
-            const done    = status === 'Completed';
-
-            if (!title) {
-                inputTitle.classList.add('ring-2', 'ring-red-400');
-                setTimeout(() => inputTitle.classList.remove('ring-2', 'ring-red-400'), 1500);
-                return;
-            }
-
-            btnSave.disabled = true;
-            btnSave.textContent = 'Guardando...';
-
-            try {
-                if (editingId === null) {
-                    const created = await createTask({ title, content, done });
-                    tasks.push(created);
-                    showToast('Tarea creada exitosamente');
-                } else {
-                    const updated = await updateTask(editingId, { title, content, done });
-                    tasks = tasks.map(t => t.id === editingId ? updated : t);
-                    showToast('Tarea actualizada');
-                }
-                updateStats();
-                renderTable();
-                closeModal();
-            } catch (err) {
-                console.error('Save error:', err);
-                showToast('Error al guardar la tarea', true);
-            } finally {
-                btnSave.disabled = false;
-                btnSave.textContent = 'Guardar';
-            }
-        });
-
-        btnNewTask.addEventListener('click', openCreate);
-        btnCancel.addEventListener('click', closeModal);
-        backdrop.addEventListener('click', closeModal);
-        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
-        fetchTasks();
-        </script>
+    <script src="index.js"></script>
 </body>
 </html>

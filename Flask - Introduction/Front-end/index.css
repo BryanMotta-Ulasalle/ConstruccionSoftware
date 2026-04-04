@@ -1,0 +1,31 @@
+body { font-family: 'Inter', sans-serif; }
+h1, h2, h3, .headline { font-family: 'Manrope', sans-serif; }
+.material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* Modal */
+#task-modal { transition: opacity 0.2s ease; }
+#task-modal.hidden { opacity: 0; pointer-events: none; }
+
+/* Toast */
+#toast {
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    transform: translateY(100px);
+    opacity: 0;
+}
+#toast.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* Loading skeleton */
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+.skeleton {
+    background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 6px;
+}
